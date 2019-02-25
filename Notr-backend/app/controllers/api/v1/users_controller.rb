@@ -25,6 +25,17 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def register
+    @user = User.create(user_params)
+    @notes = @user.notes
+    @classrooms = @user.classrooms.uniq
+    if @user
+      render json: {success: true, user: @user, notes: @notes, classrooms: @classrooms}, status: :ok
+    else
+      render json: {success: false, user: @user, notes: @notes, classrooms: @classrooms}, status: :unauthorized
+    end
+  end
+
 
   def create
     @user = User.create(user_params)
