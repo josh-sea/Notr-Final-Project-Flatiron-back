@@ -7,10 +7,21 @@ class Api::V1::NotesController < ApplicationController
     render json: @notes, status: :ok
   end
 
+  # def test
+  #     # Fetch and parse HTML document
+  #     doc = Nokogiri::HTML(open("https://en.wikipedia.org/wiki/#{params[:search]}"))
+  #     @content = doc.css('.mw-parser-output')
+  #     @html="<body>#{@content}</body>"
+  #     @testing="<html>#{@html}</html>"
+  #     render html: @testing.html_safe
+  #   end
+
 
   def create
     # byebug
     @note = Note.create(note_params)
+    note = @note
+    ActionCable.server.broadcast 'new_note', note
     render json: @note, status: :ok
   end
 

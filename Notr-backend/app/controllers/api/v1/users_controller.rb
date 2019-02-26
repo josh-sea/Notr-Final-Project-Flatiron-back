@@ -14,6 +14,14 @@ class Api::V1::UsersController < ApplicationController
   #   render json: {className: @class_name}
   # end
 
+  def listener
+    @user = User.find(params[:user_id])
+    classrooms = @user.classrooms
+    ActionCable.server.broadcast 'user_listener', classrooms
+    render json: @user, status: :ok
+  end
+
+
   def login
     @user = User.find_by(username: params[:username])
     @notes = @user.notes
@@ -68,7 +76,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:username)
+    params.require(:user).permit(:username, :user_id)
   end
 
 #################################################################################################
